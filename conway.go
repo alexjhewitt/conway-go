@@ -12,12 +12,16 @@ const (
 
 type Universe [][]bool
 
-func NewUniverse() Universe{
+func (u Universe) Alive(x, y int) bool {
+	return true
+}
+
+func NewUniverse() Universe {
 	matrix := make(Universe, height)
 	for i := range matrix {
 		matrix[i] = make([]bool, width)
 	}
-	return matrix	
+	return matrix
 }
 
 func (u Universe) Seed() {
