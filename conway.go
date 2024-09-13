@@ -13,7 +13,23 @@ const (
 type Universe [][]bool
 
 func (u Universe) Alive(x, y int) bool {
-	return true
+	var newX int
+	var newY int
+	if x > width {
+		newX = (x % width) - 1
+	} else if x < 0 {
+		newX = width + x
+	} else {
+		newX = x
+	}
+	if y > height {
+		newY = (y % height) - 1
+	} else if y < 0 {
+		newY = height + y
+	} else {
+		newY = y
+	}
+	return u[newY][newX]
 }
 
 func NewUniverse() Universe {
