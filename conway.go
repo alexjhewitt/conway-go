@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 const (
@@ -15,20 +16,8 @@ type Universe [][]bool
 func (u Universe) Alive(x, y int) bool {
 	var newX int
 	var newY int
-	if x > width {
-		newX = (x % width) - 1
-	} else if x < 0 {
-		newX = width + x
-	} else {
-		newX = x
-	}
-	if y > height {
-		newY = (y % height) - 1
-	} else if y < 0 {
-		newY = height + y
-	} else {
-		newY = y
-	}
+	newX = (x + width) % width
+	newY = (y + height) % height
 	return u[newY][newX]
 }
 
@@ -39,7 +28,6 @@ func (u Universe) Neighbors(x, y int) int {
 			if i == x && j == y {
 				continue
 			} else if u.Alive(j, i) {
-				fmt.Println(j, i)
 				count += 1
 			}
 		}
@@ -48,20 +36,8 @@ func (u Universe) Neighbors(x, y int) int {
 }
 
 func (u Universe) Next(x, y int) bool {
-	isAlive := u[y][x]
 	neighbors := u.Neighbors(x, y)
-	switch {
-	case isAlive && neighbors < 2:
-		return false
-	case isAlive && (neighbors == 2 || neighbors == 3):
-		return true
-	case isAlive && neighbors > 3:
-		return false
-	case !isAlive && neighbors == 3:
-		return true
-	default:
-		return false
-	}
+	return neighbors == 3 || neighbors == 2 && u.Alive(x, y)
 }
 
 func (u Universe) Seed() {
@@ -89,6 +65,14 @@ func (u Universe) Show() {
 	}
 }
 
+func Step(a, b Universe) {
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			b[i][j] = a.Next(j, i)
+		}
+	}
+}
+
 func NewUniverse() Universe {
 	matrix := make(Universe, height)
 	for i := range matrix {
@@ -99,7 +83,13 @@ func NewUniverse() Universe {
 
 func main() {
 	universe := NewUniverse()
+	nextStage := NewUniverse()
 	universe.Seed()
-	universe.Show()
-	fmt.Println(universe.Neighbors(0, 0))
+	for {
+		Step(universe, nextStage)
+		fmt.Print("\033[H")
+		universe.Show()
+		time.Sleep(time.Second / 30)
+		universe, nextStage = nextStage, universe
+	}
 }
