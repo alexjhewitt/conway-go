@@ -32,12 +32,19 @@ func (u Universe) Alive(x, y int) bool {
 	return u[newY][newX]
 }
 
-func NewUniverse() Universe {
-	matrix := make(Universe, height)
-	for i := range matrix {
-		matrix[i] = make([]bool, width)
+func (u Universe) Neighbors(x, y int) int {
+	count := 0
+	for i := x - 1; i < x+2; i++ {
+		for j := y - 1; j < y+2; j++ {
+			if i == x && j == y {
+				continue
+			} else if u.Alive(j, i) {
+				fmt.Println(j, i)
+				count += 1
+			}
+		}
 	}
-	return matrix
+	return count
 }
 
 func (u Universe) Seed() {
@@ -65,8 +72,17 @@ func (u Universe) Show() {
 	}
 }
 
+func NewUniverse() Universe {
+	matrix := make(Universe, height)
+	for i := range matrix {
+		matrix[i] = make([]bool, width)
+	}
+	return matrix
+}
+
 func main() {
 	universe := NewUniverse()
 	universe.Seed()
 	universe.Show()
+	fmt.Println(universe.Neighbors(0, 0))
 }
