@@ -47,6 +47,23 @@ func (u Universe) Neighbors(x, y int) int {
 	return count
 }
 
+func (u Universe) Next(x, y int) bool {
+	isAlive := u[y][x]
+	neighbors := u.Neighbors(x, y)
+	switch {
+	case isAlive && neighbors < 2:
+		return false
+	case isAlive && (neighbors == 2 || neighbors == 3):
+		return true
+	case isAlive && neighbors > 3:
+		return false
+	case !isAlive && neighbors == 3:
+		return true
+	default:
+		return false
+	}
+}
+
 func (u Universe) Seed() {
 	for i := range u {
 		for j := range u[i] {
