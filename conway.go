@@ -23,11 +23,9 @@ func (u Universe) Alive(x, y int) bool {
 
 func (u Universe) Neighbors(x, y int) int {
 	count := 0
-	for i := x - 1; i < x+2; i++ {
-		for j := y - 1; j < y+2; j++ {
-			if i == x && j == y {
-				continue
-			} else if u.Alive(j, i) {
+	for i := -1; i <= 1; i++ {
+		for j := -1; j <= 1; j++ {
+			if !(i == 0 && j == 0) && u.Alive(x + j, y + i) {
 				count += 1
 			}
 		}
