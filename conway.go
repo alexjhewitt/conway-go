@@ -25,7 +25,7 @@ func (u Universe) Neighbors(x, y int) int {
 	count := 0
 	for i := -1; i <= 1; i++ {
 		for j := -1; j <= 1; j++ {
-			if !(i == 0 && j == 0) && u.Alive(x + j, y + i) {
+			if !(i == 0 && j == 0) && u.Alive(x+j, y+i) {
 				count += 1
 			}
 		}
@@ -83,7 +83,7 @@ func main() {
 	universe := NewUniverse()
 	nextStage := NewUniverse()
 	universe.Seed()
-	for {
+	for i := 0; i < 300; i++ {
 		Step(universe, nextStage)
 		fmt.Print("\033[H")
 		universe.Show()
